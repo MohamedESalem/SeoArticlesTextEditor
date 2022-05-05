@@ -1,7 +1,6 @@
 
 import java.awt.Color;
 import java.awt.ComponentOrientation;
-import java.awt.Cursor;
 import java.awt.Font;
 import java.io.BufferedReader;
 import java.io.File;
@@ -10,6 +9,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Reader;
+import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
@@ -20,8 +20,10 @@ import javax.swing.text.DefaultHighlighter;
 import javax.swing.text.Highlighter;
 import javax.swing.undo.UndoManager;
 import java.text.SimpleDateFormat;
-import static java.util.Collections.list;
 import java.util.Date;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import javax.swing.ImageIcon;
 
 /**
  *
@@ -105,6 +107,10 @@ public class Home extends javax.swing.JFrame {
     boolean jTextPaneOriantation; // variable to store if the oriantation of the jTextPane is RTL will be true if LTR will be false
 
     public Home() {
+        URL iconURL = getClass().getResource("img/WATE Logo.png");
+        // iconURL is null when not found
+        ImageIcon icon = new ImageIcon(iconURL);
+        Home.this.setIconImage(icon.getImage());
         initComponents();
         this.setExtendedState(Home.MAXIMIZED_BOTH);
 
@@ -183,8 +189,8 @@ public class Home extends javax.swing.JFrame {
         jSeparator5 = new javax.swing.JPopupMenu.Separator();
         jMenuItem5 = new javax.swing.JMenuItem();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("SEO Articles Text Editor");
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("WebPage Article Text Editor (WATE) Tool");
         setBackground(new java.awt.Color(255, 255, 255));
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         setName("home"); // NOI18N
@@ -717,6 +723,8 @@ public class Home extends javax.swing.JFrame {
             .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
+        getAccessibleContext().setAccessibleDescription("WebPage Article Text Editor Tool or (WATE) tool, makes the writer's life better");
+
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
@@ -724,6 +732,7 @@ public class Home extends javax.swing.JFrame {
     private void new_BActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_new_BActionPerformed
 
         Home h = new Home();
+        h.saved_L.setVisible(false);
         h.setVisible(true);
 
     }//GEN-LAST:event_new_BActionPerformed
@@ -1406,95 +1415,97 @@ public class Home extends javax.swing.JFrame {
         FileNameExtensionFilter filter = new FileNameExtensionFilter(".txt File", "TXT"); //making a file name extension filter to filter the files extentions from the user
         jfc.setFileFilter(filter); // filter the files in the file chooser
 
-        jfc.showOpenDialog(Home.this); // showing file chooser
+        int x = jfc.showSaveDialog(Home.this); // showing file chooser
 
-        path = jfc.getSelectedFile().toString();
-        if (!path.substring(path.length() - 4, path.length()).equals(".txt")) { //check if the extention of the file is not txt
+        if (x == jfc.APPROVE_OPTION) {
+            path = jfc.getSelectedFile().toString();
+            if (!path.substring(path.length() - 4, path.length()).equals(".txt")) { //check if the extention of the file is not txt
 
-            System.out.println(path.substring(path.length() - 3, path.length()));
-            JOptionPane.showMessageDialog(Home.this, "You can't open a non txt file");
+                System.out.println(path.substring(path.length() - 3, path.length()));
+                JOptionPane.showMessageDialog(Home.this, "You can't open a non txt file");
 
-        } else if (path.substring(path.length() - 4, path.length()).equals(".txt")) {
+            } else if (path.substring(path.length() - 4, path.length()).equals(".txt")) {
 
-            if (jTextPane.getText().isEmpty()) {
+                if (jTextPane.getText().isEmpty()) {
 
 ///////////reading from file and showing the text in the jtextPane///////////////////////////////////////////////////////////////////////////////////////////////////////
-                File f = null; // file variable
-                FileReader fr = null; // file reader variable
-
-                try {
-                    //the action when the jtextpane is empty
-                    f = new File(path); // making object to file
-                    fr = new FileReader(f); // making object to file reader
+                    File f = null; // file variable
+                    FileReader fr = null; // file reader variable
 
                     try {
+                        //the action when the jtextpane is empty
+                        f = new File(path); // making object to file
+                        fr = new FileReader(f); // making object to file reader
 
-                        while (fr.read() != -1) {
-                            jTextPane.read(fr, f);
+                        try {
+
+                            while (fr.read() != -1) {
+                                jTextPane.read(fr, f);
+                            }
+
+                        } catch (IOException ex) {
+
+                            JOptionPane.showMessageDialog(Home.this, "Error while reading file, please contact the developer " + ex);
+
                         }
 
-                    } catch (IOException ex) {
+                    } catch (FileNotFoundException ex) {
 
-                        JOptionPane.showMessageDialog(Home.this, "Error while reading file, please contact the developer " + ex);
+                        JOptionPane.showMessageDialog(Home.this, "File not found Error please contact the developer " + ex);
 
+                    } finally {
+                        try {
+
+                            fr.close();
+
+                        } catch (IOException ex) {
+                            JOptionPane.showMessageDialog(Home.this, "Error while closing the stream please contact the developer " + ex);
+                        }
                     }
-
-                } catch (FileNotFoundException ex) {
-
-                    JOptionPane.showMessageDialog(Home.this, "File not found Error please contact the developer " + ex);
-
-                } finally {
-                    try {
-
-                        fr.close();
-
-                    } catch (IOException ex) {
-                        JOptionPane.showMessageDialog(Home.this, "Error while closing the stream please contact the developer " + ex);
-                    }
-                }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-            } else {
-                Home h = new Home();
-                h.setVisible(true);
+                } else {
+                    Home h = new Home();
+                    h.setVisible(true);
+                    h.saved_L.setVisible(false);
 
-                File f = null; // file variable
-                FileReader fr = null; // file reader variable
-
-                try {
-                    //the action when the jtextpane is empty
-                    f = new File(path); // making object to file
-                    fr = new FileReader(f); // making object to file reader
+                    File f = null; // file variable
+                    FileReader fr = null; // file reader variable
 
                     try {
+                        //the action when the jtextpane is empty
+                        f = new File(path); // making object to file
+                        fr = new FileReader(f); // making object to file reader
 
-                        while (fr.read() != -1) {
-                            jTextPane.read(fr, f);
+                        try {
+
+                            while (fr.read() != -1) {
+                                jTextPane.read(fr, f);
+                            }
+
+                        } catch (IOException ex) {
+
+                            JOptionPane.showMessageDialog(Home.this, "Error while reading file, please contact the developer " + ex);
+
                         }
 
-                    } catch (IOException ex) {
+                    } catch (FileNotFoundException ex) {
 
-                        JOptionPane.showMessageDialog(Home.this, "Error while reading file, please contact the developer " + ex);
+                        JOptionPane.showMessageDialog(Home.this, "File not found Error please contact the developer " + ex);
 
+                    } finally {
+                        try {
+
+                            fr.close();
+
+                        } catch (IOException ex) {
+                            JOptionPane.showMessageDialog(Home.this, "Error while closing the stream please contact the developer " + ex);
+                        }
                     }
 
-                } catch (FileNotFoundException ex) {
-
-                    JOptionPane.showMessageDialog(Home.this, "File not found Error please contact the developer " + ex);
-
-                } finally {
-                    try {
-
-                        fr.close();
-
-                    } catch (IOException ex) {
-                        JOptionPane.showMessageDialog(Home.this, "Error while closing the stream please contact the developer " + ex);
-                    }
                 }
-
             }
         }
-
     }//GEN-LAST:event_open_BActionPerformed
 
     private void linkMenu_BActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_linkMenu_BActionPerformed
@@ -1532,45 +1543,54 @@ public class Home extends javax.swing.JFrame {
                 FileNameExtensionFilter filter = new FileNameExtensionFilter(".txt File", "TXT"); //making a file name extension filter to filter the files extentions from the user
                 jfc.setFileFilter(filter); // filter the files in the file chooser
 
-                jfc.showSaveDialog(Home.this); // showing file chooser
+                //making object from simple date format to get the timestamp
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh-mm-ss");
+                Date date = new Date();
+                String dt = sdf.format(date).toString();
 
-                savePath = jfc.getSelectedFile().toString();
-                if (!savePath.substring(savePath.length() - 4, savePath.length()).equals(".txt")) { //check if the extention of the file is not txt
+                jfc.setSelectedFile(new File("(WATE) " + dt + ".txt")); //putting a defult file nameto the filechooser
 
-                    System.out.println(savePath.substring(savePath.length() - 3, savePath.length()));
-                    savePath = null; // to make sure when the user try again and save the fill chooser will not open becase the savePath will not be equal null
-                    JOptionPane.showMessageDialog(Home.this, "You can't save the file as non txt file");
+                int x = jfc.showSaveDialog(Home.this); // showing file chooser
 
-                } else if (savePath.substring(savePath.length() - 4, savePath.length()).equals(".txt")) {
+                if (x == jfc.APPROVE_OPTION) {
+                    savePath = jfc.getSelectedFile().toString();
 
-                    if (jTextPane.getText().isEmpty()) {
+                    String process = savePath.substring(savePath.length() - 4, savePath.length());
+                    if (!process.equals(".txt")) {
+                        savePath = savePath + ".txt";
 
-                    } else if (!jTextPane.getText().isEmpty()) {
+                    } else if (savePath.substring(savePath.length() - 4, savePath.length()).equals(".txt")) {
 
-                        File f = new File(savePath);
-                        FileWriter fw = null;
+                        if (jTextPane.getText().isEmpty()) {
 
-                        try {
+                        } else if (!jTextPane.getText().isEmpty()) {
 
-                            fw = new FileWriter(f);
+                            File f = new File(savePath);
+                            FileWriter fw = null;
 
-                            fw.write(jTextPane.getText());
-
-                            Multithreading threading = new Multithreading(); //making object of Multithreading class to make savedLabel appeare when the user save a file and not freez the application so use multitheading
-                            threading.start(); // method calling to start
-
-                        } catch (IOException ex) {
-                            Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
-                        } finally {
                             try {
-                                fw.close();
+
+                                fw = new FileWriter(f);
+
+                                fw.write(jTextPane.getText());
+
+                                Multithreading threading = new Multithreading(); //making object of Multithreading class to make savedLabel appeare when the user save a file and not freez the application so use multitheading
+                                threading.start(); // method calling to start
+
                             } catch (IOException ex) {
                                 Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
+                            } finally {
+                                try {
+                                    fw.close();
+                                } catch (IOException ex) {
+                                    Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
+                                }
                             }
                         }
                     }
-                }
+                } else {
 
+                }
             } else {
 
                 File f = new File(savePath);
@@ -1741,7 +1761,7 @@ public class Home extends javax.swing.JFrame {
         if (jTextPaneOriantation == false) {
 
             try {
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy/dd/mm hh:mm aa");
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd hh:mm aa");
                 Date date = new Date();
                 String dt = sdf.format(date).toString();
 
@@ -1754,7 +1774,7 @@ public class Home extends javax.swing.JFrame {
         } else if (jTextPaneOriantation == true) {
 
             try {
-                SimpleDateFormat sdf = new SimpleDateFormat("hh:mmaa MM/dd/yyyy");
+                SimpleDateFormat sdf = new SimpleDateFormat("hh:mmaa dd/MM/yyyy");
                 Date date = new Date();
                 String dt = sdf.format(date).toString();
 
@@ -1777,46 +1797,58 @@ public class Home extends javax.swing.JFrame {
             FileNameExtensionFilter filter = new FileNameExtensionFilter(".txt File", "TXT"); //making a file name extension filter to filter the files extentions from the user
             jfc.setFileFilter(filter); // filter the files in the file chooser
 
-            jfc.showSaveDialog(Home.this); // showing file chooser
+            //making object from simple date format to get the timestamp
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh-mm-ss");
+            Date date = new Date();
+            String dt = sdf.format(date).toString();
 
-            savePath = jfc.getSelectedFile().toString();
-            if (!savePath.substring(savePath.length() - 4, savePath.length()).equals(".txt")) { //check if the extention of the file is not txt
+            jfc.setSelectedFile(new File("(WATE) " + dt + ".txt")); //putting a defult file nameto the filechooser
 
-                System.out.println(savePath.substring(savePath.length() - 3, savePath.length()));
-                savePath = null; // to make sure when the user try again and save the fill chooser will not open becase the savePath will not be equal null
-                JOptionPane.showMessageDialog(Home.this, "You can't save the file as non txt file");
+            int x = jfc.showSaveDialog(Home.this); // showing file chooser
 
-            } else if (savePath.substring(savePath.length() - 4, savePath.length()).equals(".txt")) {
+            if (x == jfc.APPROVE_OPTION) {
+                savePath = jfc.getSelectedFile().toString();
 
-                if (jTextPane.getText().isEmpty()) {
+                String process = savePath.substring(savePath.length() - 4, savePath.length());
+                if (!process.equals(".txt")) {
+                    savePath = savePath + ".txt";
 
-                } else if (!jTextPane.getText().isEmpty()) {
+                } else {
 
-                    File f = new File(savePath);
-                    FileWriter fw = null;
+                }
+                if (savePath.substring(savePath.length() - 4, savePath.length()).equals(".txt")) {
 
-                    try {
+                    if (jTextPane.getText().isEmpty()) {
 
-                        fw = new FileWriter(f);
+                    } else if (!jTextPane.getText().isEmpty()) {
 
-                        fw.write(jTextPane.getText());
+                        File f = new File(savePath);
+                        FileWriter fw = null;
 
-                        Multithreading threading = new Multithreading(); //making object of Multithreading class to make savedLabel appeare when the user save a file and not freez the application so use multitheading
-                        threading.start(); // method calling to start
-
-                    } catch (IOException ex) {
-                        Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
-                    } finally {
                         try {
-                            fw.close();
+
+                            fw = new FileWriter(f);
+
+                            fw.write(jTextPane.getText());
+
+                            Multithreading threading = new Multithreading(); //making object of Multithreading class to make savedLabel appeare when the user save a file and not freez the application so use multitheading
+                            threading.start(); // method calling to start
+
                         } catch (IOException ex) {
                             Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
+                        } finally {
+                            try {
+                                fw.close();
+                            } catch (IOException ex) {
+                                Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
+                            }
                         }
                     }
                 }
             }
-        }
+        } else {
 
+        }
     }//GEN-LAST:event_saveAs_BActionPerformed
 
     private void title_BMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_title_BMouseExited
@@ -1866,214 +1898,249 @@ public class Home extends javax.swing.JFrame {
 
     private void build_BActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_build_BActionPerformed
         // this method converts all symbols in the article to html tags
-        
-        //start displaying Jfilechooser to the user to choose the path of the excuted file
-        JFileChooser jfc = new JFileChooser(); //making a JFileChooser object to show a file chooser
-        FileNameExtensionFilter filter = new FileNameExtensionFilter("Web File (.html)", "html"); //making a file name extension filter to filter the files extentions from the user
-        jfc.setFileFilter(filter); // filter the files in the file chooser
-        
-        jfc.showSaveDialog(Home.this); // showing file chooser
-        //end displaying Jfilechooser to the user to choose the path of the excuted file
-        
-        
-        jTextPane.getHighlighter().removeAllHighlights();// removing all highlights in the JtextPane because of the replaceall method down is crushing of the highlights
 
-        File fReadFrom = new File("buildProcessOne.properties"); //read from
-        File fWriteTo = new File(jfc.getSelectedFile().toString()); // write to
+        if (jTextPane.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(Home.this, "You can't build an empty article");
+        } else {
+            //start displaying Jfilechooser to the user to choose the path of the excuted file
+            JFileChooser jfc = new JFileChooser(); //making a JFileChooser object to show a file chooser
+            FileNameExtensionFilter filter = new FileNameExtensionFilter("Web File (.html)", "html"); //making a file name extension filter to filter the files extentions from the user
+            jfc.setFileFilter(filter); // filter the files in the file chooser
 
-        FileWriter fwOne = null; // write to the first file
+            //making object from simple date format to get the timestamp
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            Date date = new Date();
+            String dt = sdf.format(date).toString();
 
-        Reader fr = null; // read from the first file
-        BufferedReader br = null; // read from the first file
+            String titleName = "fileName";
 
-        FileWriter fwTwo = null; // write to the second file
-
-        //Start files declariation for the properteis tags code
-        FileReader fPathBeforeCode = null;
-        FileReader fPathTitleProp = null;
-        FileReader fPathH1Prop = null;
-        FileReader fPathH2Prop = null;
-        FileReader fPathPProp = null;
-        FileReader fPathLinkProp = null;
-        FileReader fPathAfterCode = null;
-
-        try {
-            fPathBeforeCode = new FileReader("data//runCode//beforeCode.properties"); //file path for beforeCode.properties
-            fPathTitleProp = new FileReader("data//runCode//titleProp.properties"); //file path for titleProp.properties
-            fPathH1Prop = new FileReader("data//runCode//h1Prop.properties"); //file path for h1Prop.properties
-            fPathH2Prop = new FileReader("data//runCode//h2Prop.properties"); //file path for h2Prop.properties
-            fPathPProp = new FileReader("data//runCode//pProp.properties"); //file path for pProp.properties
-            fPathLinkProp = new FileReader("data//runCode//linkProp.properties"); //file path for linkProp.properties
-            fPathAfterCode = new FileReader("data//runCode//afterCode.properties"); //file path for afterCode.properties
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Error while building the article, Please contact the developer " + e);
-
-        }
-        //End files declariation for the properteis tags code
-
-        //Start write declaration for the properteis tags code
-        BufferedReader fwReaderBeforeCode = null;
-        BufferedReader fwReaderTitleProp = null;
-        BufferedReader fwReaderH1Prop = null;
-        BufferedReader fwReaderH2Prop = null;
-        BufferedReader fwReaderPProp = null;
-        BufferedReader fwReaderLinkProp = null;
-        BufferedReader fwReaderAfterCode = null;
-        //End write declaration for the properteis tags code
-
-        //start write the the jTextPane in the first file
-        try {
-
-            fwOne = new FileWriter(fReadFrom);
-
-            fwOne.write(jTextPane.getText());
-
-        } catch (IOException ex) {
-            JOptionPane.showMessageDialog(this, "Error while building the article, Please contact the developer " + ex);
-        } finally {
-            try {
-                fwOne.close();
-            } catch (IOException ex) {
-                JOptionPane.showMessageDialog(this, "Error while building the article, Please contact the developer " + ex);
-            }
-        }
-        //End write the the jTextPane in the first file
-
-        //Start reading from the properites files that stored the code that the user entered to impelement it to the final file
-        try {
-
-            //Start write declaration for the properteis tags code
-            fwReaderBeforeCode = new BufferedReader(fPathBeforeCode);
-            fwReaderTitleProp = new BufferedReader(fPathTitleProp);
-            fwReaderH1Prop = new BufferedReader(fPathH1Prop);
-            fwReaderH2Prop = new BufferedReader(fPathH2Prop);
-            fwReaderPProp = new BufferedReader(fPathPProp);
-            fwReaderLinkProp = new BufferedReader(fPathLinkProp);
-            fwReaderAfterCode = new BufferedReader(fPathAfterCode);
-            //End write declaration for the properteis tags code
-
-            //Start initializing variables with code from the user
-            String line;
-            //Start first initializing the variable beforeCode with the text that in the text file beforeCode.properties that the user has entered
-
-            line = fwReaderBeforeCode.readLine();
-            beforeCode = "";
-
-            while (line != null) {
-                beforeCode += line;
-                line = fwReaderBeforeCode.readLine();
-            }
-            //End first initializing the variable beforeCode with the text that in the text file beforeCode.properties that the user has entered
-
-            //Start h1 initializing the variable beforeCode with the text that in the text file beforeCode.properties that the user has entered
-            line = fwReaderH1Prop.readLine();
-            h1Prop = "";
-
-            while (line != null) {
-                h1Prop += line;
-                line = fwReaderH1Prop.readLine();
-            }
-            //End h1 initializing the variable beforeCode with the text that in the text file beforeCode.properties that the user has entered
-
-            //Start h2 initializing the variable beforeCode with the text that in the text file beforeCode.properties that the user has entered
-            line = fwReaderH2Prop.readLine();
-            h2Prop = "";
-
-            while (line != null) {
-                h2Prop += line;
-                line = fwReaderH2Prop.readLine();
-            }
-            //End h2 initializing the variable beforeCode with the text that in the text file beforeCode.properties that the user has entered
-
-            //Start p initializing the variable beforeCode with the text that in the text file beforeCode.properties that the user has entered
-            line = fwReaderPProp.readLine();
-            pProp = "";
-
-            while (line != null) {
-                pProp += line;
-                line = fwReaderPProp.readLine();
-            }
-            //End p initializing the variable beforeCode with the text that in the text file beforeCode.properties that the user has entered
-
-            //Start link initializing the variable beforeCode with the text that in the text file beforeCode.properties that the user has entered
-            line = fwReaderLinkProp.readLine();
-            linkProp = "";
-
-            while (line != null) {
-                linkProp += line;
-                line = fwReaderLinkProp.readLine();
-            }
-            //End link initializing the variable beforeCode with the text that in the text file beforeCode.properties that the user has entered
-
-            //Start last initializing the variable beforeCode with the text that in the text file beforeCode.properties that the user has entered
-            line = fwReaderAfterCode.readLine();
-            afterCode = "";
-
-            while (line != null) {
-                afterCode += line;
-                line = fwReaderAfterCode.readLine();
-            }
-            //End last initializing the variable beforeCode with the text that in the text file beforeCode.properties that the user has entered
-
-            //End initializing variables with code from the user
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, "Error while reading the implemented code to the build, Please contact the developer " + ex);
-        } finally {
-            try {
-                fwReaderBeforeCode.close();
-                fwReaderTitleProp.close();
-                fwReaderH1Prop.close();
-                fwReaderH2Prop.close();
-                fwReaderPProp.close();
-                fwReaderLinkProp.close();
-                fwReaderAfterCode.close();
-            } //End reading from the properites files that stored the code that the user entered to impelement it to the final file
-            catch (IOException ex) {
-                JOptionPane.showMessageDialog(this, "Error while closing the reading stream, Please contact the developer " + ex);
-            }
-        }
-
-        {// start writing in the second file
-            try {
-                fr = new FileReader(fReadFrom);
-
-            } catch (FileNotFoundException ex) {
-                JOptionPane.showMessageDialog(this, "Error while building the article Cant find the building process file , Please contact the developer " + ex);
+            Pattern pattern = Pattern.compile("#_#(.*?)#_#/", Pattern.DOTALL);
+            Matcher matcher = pattern.matcher(jTextPane.getText());
+            while (matcher.find()) {
+                titleName = matcher.group(1);
             }
 
-            //Start final exceute code //writing the code in the final file
-            try {
+            jfc.setSelectedFile(new File(dt + "_" + titleName + ".html")); //putting a defult file nameto the filechooser
 
-                fwTwo = new FileWriter(fWriteTo);
-                br = new BufferedReader(fr);
+            int x = jfc.showSaveDialog(Home.this); // showing file chooser
+            //end displaying Jfilechooser to the user to choose the path of the excuted file
 
-                fwTwo.write(beforeCode + "\n\n");
-                while (br.ready()) { // reading from the first file then write to the second file and replace all symbols link #-# to html tags
+            savePath = jfc.getSelectedFile().toString();
 
-                    fwTwo.append(br.readLine().replaceAll(title_symbEnd, "</title>").replaceAll(title_symb, "<title>").replaceAll(h1_symbEnd, "</h1>").replaceAll(h1_symb, "<h1 " + h1Prop + ">").replaceAll(h2_symbEnd, "</h2>").replaceAll(h2_symb, "<h2 " + h2Prop + ">").replaceAll(paragraph_symbEnd, "</p>").replaceAll(paragraph_symb, "<p " + pProp + ">").replaceAll(link_symbEnd, "</a>").replaceAll(link_symb, "<a " + "href=").replaceAll("``", "\" " + linkProp + ">").replaceAll("`", "\"") + "\n"); // reading from the first file then write to the second file and replace all symbol #-#/ to </h1>
+            if (x == jfc.APPROVE_OPTION) {
+
+                String process = savePath.substring(savePath.length() - 5, savePath.length());
+                if (!process.equals(".html")) {
+                    savePath = savePath + ".html";
+                    System.out.println(savePath);
+                } else {
 
                 }
-                fwTwo.append("\n\n" + afterCode);
 
-            } catch (IOException ex) {
-                JOptionPane.showMessageDialog(this, "Error while building the article, Please contact the developer " + ex);
-            } finally {
+                jTextPane.getHighlighter().removeAllHighlights();// removing all highlights in the JtextPane because of the replaceall method down is crushing of the highlights
+
+                File fReadFrom = new File("data//log//buildProcessOne.properties"); //read from
+                File fWriteTo = new File(savePath); // write to
+
+                FileWriter fwOne = null; // write to the first file
+
+                Reader fr = null; // read from the first file
+                BufferedReader br = null; // read from the first file
+
+                FileWriter fwTwo = null; // write to the second file
+
+                //Start files declariation for the properteis tags code
+                FileReader fPathBeforeCode = null;
+                FileReader fPathTitleProp = null;
+                FileReader fPathH1Prop = null;
+                FileReader fPathH2Prop = null;
+                FileReader fPathPProp = null;
+                FileReader fPathLinkProp = null;
+                FileReader fPathAfterCode = null;
+
                 try {
-                    fwOne.close();
-                    fwTwo.close();
-                    br.close();
-                    fr.close();
+                    fPathBeforeCode = new FileReader("data//runCode//beforeCode.properties"); //file path for beforeCode.properties
+                    fPathTitleProp = new FileReader("data//runCode//titleProp.properties"); //file path for titleProp.properties
+                    fPathH1Prop = new FileReader("data//runCode//h1Prop.properties"); //file path for h1Prop.properties
+                    fPathH2Prop = new FileReader("data//runCode//h2Prop.properties"); //file path for h2Prop.properties
+                    fPathPProp = new FileReader("data//runCode//pProp.properties"); //file path for pProp.properties
+                    fPathLinkProp = new FileReader("data//runCode//linkProp.properties"); //file path for linkProp.properties
+                    fPathAfterCode = new FileReader("data//runCode//afterCode.properties"); //file path for afterCode.properties
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(this, "Error while building the article, Please contact the developer " + e);
+
+                }
+                //End files declariation for the properteis tags code
+
+                //Start write declaration for the properteis tags code
+                BufferedReader fwReaderBeforeCode = null;
+                BufferedReader fwReaderTitleProp = null;
+                BufferedReader fwReaderH1Prop = null;
+                BufferedReader fwReaderH2Prop = null;
+                BufferedReader fwReaderPProp = null;
+                BufferedReader fwReaderLinkProp = null;
+                BufferedReader fwReaderAfterCode = null;
+                //End write declaration for the properteis tags code
+
+                //start write the the jTextPane in the first file
+                try {
+
+                    fwOne = new FileWriter(fReadFrom);
+
+                    fwOne.write(jTextPane.getText());
+
                 } catch (IOException ex) {
                     JOptionPane.showMessageDialog(this, "Error while building the article, Please contact the developer " + ex);
+                } finally {
+                    try {
+                        fwOne.close();
+                    } catch (IOException ex) {
+                        JOptionPane.showMessageDialog(this, "Error while building the article, Please contact the developer " + ex);
+                    }
+                }
+                //End write the the jTextPane in the first file
+
+                //Start reading from the properites files that stored the code that the user entered to impelement it to the final file
+                try {
+
+                    //Start write declaration for the properteis tags code
+                    fwReaderBeforeCode = new BufferedReader(fPathBeforeCode);
+                    fwReaderTitleProp = new BufferedReader(fPathTitleProp);
+                    fwReaderH1Prop = new BufferedReader(fPathH1Prop);
+                    fwReaderH2Prop = new BufferedReader(fPathH2Prop);
+                    fwReaderPProp = new BufferedReader(fPathPProp);
+                    fwReaderLinkProp = new BufferedReader(fPathLinkProp);
+                    fwReaderAfterCode = new BufferedReader(fPathAfterCode);
+                    //End write declaration for the properteis tags code
+
+                    //Start initializing variables with code from the user
+                    String line;
+                    //Start first initializing the variable beforeCode with the text that in the text file beforeCode.properties that the user has entered
+
+                    line = fwReaderBeforeCode.readLine();
+                    beforeCode = "";
+
+                    while (line != null) {
+                        beforeCode += line;
+                        line = fwReaderBeforeCode.readLine();
+                    }
+                    //End first initializing the variable beforeCode with the text that in the text file beforeCode.properties that the user has entered
+
+                    //Start h1 initializing the variable beforeCode with the text that in the text file beforeCode.properties that the user has entered
+                    line = fwReaderH1Prop.readLine();
+                    h1Prop = "";
+
+                    while (line != null) {
+                        h1Prop += line;
+                        line = fwReaderH1Prop.readLine();
+                    }
+                    //End h1 initializing the variable beforeCode with the text that in the text file beforeCode.properties that the user has entered
+
+                    //Start h2 initializing the variable beforeCode with the text that in the text file beforeCode.properties that the user has entered
+                    line = fwReaderH2Prop.readLine();
+                    h2Prop = "";
+
+                    while (line != null) {
+                        h2Prop += line;
+                        line = fwReaderH2Prop.readLine();
+                    }
+                    //End h2 initializing the variable beforeCode with the text that in the text file beforeCode.properties that the user has entered
+
+                    //Start p initializing the variable beforeCode with the text that in the text file beforeCode.properties that the user has entered
+                    line = fwReaderPProp.readLine();
+                    pProp = "";
+
+                    while (line != null) {
+                        pProp += line;
+                        line = fwReaderPProp.readLine();
+                    }
+                    //End p initializing the variable beforeCode with the text that in the text file beforeCode.properties that the user has entered
+
+                    //Start link initializing the variable beforeCode with the text that in the text file beforeCode.properties that the user has entered
+                    line = fwReaderLinkProp.readLine();
+                    linkProp = "";
+
+                    while (line != null) {
+                        linkProp += line;
+                        line = fwReaderLinkProp.readLine();
+                    }
+                    //End link initializing the variable beforeCode with the text that in the text file beforeCode.properties that the user has entered
+
+                    //Start last initializing the variable beforeCode with the text that in the text file beforeCode.properties that the user has entered
+                    line = fwReaderAfterCode.readLine();
+                    afterCode = "";
+
+                    while (line != null) {
+                        afterCode += line;
+                        line = fwReaderAfterCode.readLine();
+                    }
+                    //End last initializing the variable beforeCode with the text that in the text file beforeCode.properties that the user has entered
+
+                    //End initializing variables with code from the user
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(this, "Error while reading the implemented code to the build, Please contact the developer " + ex);
+                } finally {
+                    try {
+                        fwReaderBeforeCode.close();
+                        fwReaderTitleProp.close();
+                        fwReaderH1Prop.close();
+                        fwReaderH2Prop.close();
+                        fwReaderPProp.close();
+                        fwReaderLinkProp.close();
+                        fwReaderAfterCode.close();
+                    } //End reading from the properites files that stored the code that the user entered to impelement it to the final file
+                    catch (IOException ex) {
+                        JOptionPane.showMessageDialog(this, "Error while closing the reading stream, Please contact the developer " + ex);
+                    }
                 }
 
+                {// start writing in the second file
+                    try {
+                        fr = new FileReader(fReadFrom);
+
+                    } catch (FileNotFoundException ex) {
+                        JOptionPane.showMessageDialog(this, "Error while building the article Cant find the building process file , Please contact the developer " + ex);
+                    }
+
+                    //Start final exceute code //writing the code in the final file
+                    try {
+
+                        fwTwo = new FileWriter(fWriteTo);
+                        br = new BufferedReader(fr);
+
+                        fwTwo.write(beforeCode + "\n\n");
+                        while (br.ready()) { // reading from the first file then write to the second file and replace all symbols link #-# to html tags
+
+                            fwTwo.append(br.readLine().replaceAll(title_symbEnd, "</title>").replaceAll(title_symb, "<title>").replaceAll(h1_symbEnd, "</h1>").replaceAll(h1_symb, "<h1 " + h1Prop + ">").replaceAll(h2_symbEnd, "</h2>").replaceAll(h2_symb, "<h2 " + h2Prop + ">").replaceAll(paragraph_symbEnd, "</p>").replaceAll(paragraph_symb, "<p " + pProp + ">").replaceAll(link_symbEnd, "</a>").replaceAll(link_symb, "<a " + "href=").replaceAll("``", "\" " + linkProp + ">").replaceAll("`", "\"") + "\n"); // reading from the first file then write to the second file and replace all symbol #-#/ to </h1>
+
+                        }
+                        fwTwo.append("\n\n" + afterCode);
+
+                    } catch (IOException ex) {
+                        JOptionPane.showMessageDialog(this, "Error while building the article, Please contact the developer " + ex);
+                    } finally {
+                        try {
+                            fwOne.close();
+                            fwTwo.close();
+                            br.close();
+                            fr.close();
+                        } catch (IOException ex) {
+                            JOptionPane.showMessageDialog(this, "Error while building the article, Please contact the developer " + ex);
+                        }
+
+                    }
+                    //End final exceute code //writing the code in the final file
+
+                }// end writing in the second file
+
+                jTextPane.setText("");
+                JOptionPane.showMessageDialog(Home.this, "Your File has been built.");
+
+            } else {
+
             }
-            //End final exceute code //writing the code in the final file
+        }
 
-        }// end writing in the second file
-
-        jTextPane.setText("");
-        JOptionPane.showMessageDialog(Home.this, "Your File has been built.");
     }//GEN-LAST:event_build_BActionPerformed
 
     /**
@@ -2107,7 +2174,7 @@ public class Home extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 Home h = new Home();
-                h.setTitle("SEO Articles Text Editor");
+                h.setTitle("WebPage Article Text Editor (WATE) tool");
                 h.setVisible(true);
                 saved_L.setVisible(false);
             }
