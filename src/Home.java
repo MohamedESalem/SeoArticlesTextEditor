@@ -58,6 +58,9 @@ public class Home extends javax.swing.JFrame {
 
     static final String link_symb = "#/#"; //variable to save the link symbol to use it befor and after the selected text and replace it when write in file with <link> tag tag in html
     static final String link_symbEnd = "#/#/"; //variable to save the link symbol to use it befor and after the selected text and replace it when write in file with <link> tag tag in html
+
+    static final String video_symb = "#,#"; //variable to save the video symbol to use it befor and after the selected text and replace it when write in file with <link> tag tag in html
+    static final String video_symbEnd = "#,#/"; //variable to save the video symbol to use it befor and after the selected text and replace it when write in file with <link> tag tag in html
     //static final String bold_symb = "#b#"; //variable to save the bold symbol to use it befor and after the selected text and replace it when write in file with <b> tag tag in html
 
     //Start variables of the symbol loop checker
@@ -90,11 +93,11 @@ public class Home extends javax.swing.JFrame {
     String savePath = null; // variable to store path that get from the file chooser in save
 
     String beforeCode = ""; // variable to store the code after the article to use it in the build
-    //String titleProp = ""; // variable to store the style or properties of the text the will be taged with Title tag   edit: the title tag does not accept syeling so i deleted it
-    String h1Prop = ""; // variable to store the style or properties of the text the will be taged with h1 tag
-    String h2Prop = ""; // variable to store the style or properties of the text the will be taged with h2 tag
-    String pProp = ""; // variable to store the style of or properties the text the will be taged with p tag
-    String linkProp = ""; // variable to store the style or properties of the text the will be taged with link tag
+    //String titleProp = ""; // variable to store the style or properties of the text the will be tagged with Title tag   edit: the title tag does not accept syeling so i deleted it
+    String h1Prop = ""; // variable to store the style or properties of the text the will be tagged with h1 tag
+    String h2Prop = ""; // variable to store the style or properties of the text the will be tagged with h2 tag
+    String pProp = ""; // variable to store the style of or properties the text the will be tagged with p tag
+    String linkProp = ""; // variable to store the style or properties of the text the will be tagged with link tag
     String afterCode = ""; // variable to store the code before the article to use it in the build
 
     //declaring colors
@@ -138,7 +141,6 @@ public class Home extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        newLine_B = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTextPane = new javax.swing.JTextPane();
         txtSize_L = new javax.swing.JLabel();
@@ -149,6 +151,7 @@ public class Home extends javax.swing.JFrame {
         subHeader_B = new javax.swing.JButton();
         paragraph_B = new javax.swing.JButton();
         addLink_B = new javax.swing.JButton();
+        addVideo_B = new javax.swing.JButton();
         remove_B = new javax.swing.JButton();
         saved_L = new javax.swing.JLabel();
         jMenuBar = new javax.swing.JMenuBar();
@@ -196,24 +199,9 @@ public class Home extends javax.swing.JFrame {
         setName("home"); // NOI18N
         setSize(new java.awt.Dimension(700, 500));
 
-        jPanel1.setBackground(new java.awt.Color(229, 229, 229));
+        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
-        newLine_B.setBackground(new java.awt.Color(0, 0, 0));
-        newLine_B.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        newLine_B.setForeground(new java.awt.Color(255, 255, 255));
-        newLine_B.setText("N/L");
-        newLine_B.setToolTipText("<html>\n <body>\n  <h5>New Line</h5>\n </body>\n</html>");
-        newLine_B.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(229, 229, 229), 4, true));
-        newLine_B.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        newLine_B.setFocusable(false);
-        newLine_B.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        newLine_B.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                newLine_BActionPerformed(evt);
-            }
-        });
-
-        jTextPane.setBackground(new java.awt.Color(249, 249, 249));
+        jTextPane.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.LOWERED, new java.awt.Color(233, 233, 233), new java.awt.Color(233, 233, 233), null, null));
         jTextPane.setFont(new java.awt.Font("Segoe UI", 0, 20)); // NOI18N
         jTextPane.addMouseWheelListener(new java.awt.event.MouseWheelListener() {
             public void mouseWheelMoved(java.awt.event.MouseWheelEvent evt) {
@@ -228,7 +216,8 @@ public class Home extends javax.swing.JFrame {
         textSize.setFont(new java.awt.Font("Segoe UI", 0, 11)); // NOI18N
         textSize.setText("20");
 
-        jToolBar1.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(229, 229, 229), 1, true));
+        jToolBar1.setBackground(new java.awt.Color(255, 255, 255));
+        jToolBar1.setBorder(null);
         jToolBar1.setFloatable(false);
         jToolBar1.setRollover(true);
         jToolBar1.setMaximumSize(new java.awt.Dimension(1502, 30));
@@ -375,6 +364,36 @@ public class Home extends javax.swing.JFrame {
         });
         jToolBar1.add(addLink_B);
 
+        addVideo_B.setBackground(new java.awt.Color(102, 46, 145));
+        addVideo_B.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        addVideo_B.setForeground(new java.awt.Color(255, 255, 255));
+        addVideo_B.setText("Add Video");
+        addVideo_B.setToolTipText("<html>  <body>   <h4>Add a youtube video</h4>  </body> </html>");
+        addVideo_B.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(229, 229, 229), 2, true));
+        addVideo_B.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        addVideo_B.setFocusPainted(false);
+        addVideo_B.setFocusable(false);
+        addVideo_B.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        addVideo_B.setMargin(new java.awt.Insets(2, 30, 2, 30));
+        addVideo_B.setMaximumSize(new java.awt.Dimension(250, 28));
+        addVideo_B.setMinimumSize(new java.awt.Dimension(143, 28));
+        addVideo_B.setPreferredSize(new java.awt.Dimension(55, 24));
+        addVideo_B.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        addVideo_B.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                addVideo_BMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                addVideo_BMouseExited(evt);
+            }
+        });
+        addVideo_B.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addVideo_BActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(addVideo_B);
+
         remove_B.setBackground(new java.awt.Color(255, 255, 255));
         remove_B.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         remove_B.setText("Remove");
@@ -412,23 +431,20 @@ public class Home extends javax.swing.JFrame {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(jToolBar1, javax.swing.GroupLayout.DEFAULT_SIZE, 717, Short.MAX_VALUE)
+                .addComponent(jToolBar1, javax.swing.GroupLayout.DEFAULT_SIZE, 741, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(saved_L)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtSize_L)
                 .addGap(4, 4, 4)
                 .addComponent(textSize)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(newLine_B, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addContainerGap(96, Short.MAX_VALUE))
             .addComponent(jScrollPane2)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(newLine_B)
                     .addComponent(jToolBar1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addContainerGap()
@@ -437,6 +453,7 @@ public class Home extends javax.swing.JFrame {
                             .addComponent(textSize)
                             .addComponent(saved_L))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 429, Short.MAX_VALUE))
         );
 
@@ -1176,9 +1193,6 @@ public class Home extends javax.swing.JFrame {
         title_B.setForeground(Color.red);
     }//GEN-LAST:event_title_BMouseEntered
 
-    private void newLine_BActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newLine_BActionPerformed
-        JOptionPane.showMessageDialog(null, "Comming Soon");
-    }//GEN-LAST:event_newLine_BActionPerformed
     private void addLink_BMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_addLink_BMouseEntered
         addLink_B.setBackground(Color.white);
         addLink_B.setForeground(myPurple);
@@ -1199,7 +1213,7 @@ public class Home extends javax.swing.JFrame {
 
         cursorT = jTextPane.getSelectedText();
 
-        //Start checking the last character to know if ther is an empty char' ' after the text
+        //Start checking the last character to know if there is an empty char' ' after the text
         if (jTextPane.getSelectedText() != null) {
             cursorT = jTextPane.getSelectedText();
 
@@ -1217,7 +1231,7 @@ public class Home extends javax.swing.JFrame {
 
             } else {
 
-                //Start checking the first character to know if ther is an empty char' ' befor the text
+                //Start checking the first character to know if there is an empty char' ' befor the text
                 selectedCharCheck = cursorT.charAt(0);
 
                 if (selectedCharCheck == ' ') {
@@ -1227,7 +1241,7 @@ public class Home extends javax.swing.JFrame {
                     emptyCursorState = false;
                 }
 
-                //End checking the first character to know if ther is an empty char' ' befor the text
+                //End checking the first character to know if there is an empty char' ' befor the text
                 if (emptyCursorState == true) {
                     JOptionPane.showMessageDialog(this, "You can't remove tags with empty characters, Please select your text without EMPTY characters from the right and left of your text");
                 } else if (emptyCursorState == false) {
@@ -1242,7 +1256,7 @@ public class Home extends javax.swing.JFrame {
                             if (i == 0 && selectedCharCheck == '#') {
                                 stateOne = true;
 
-                            } else if (i == 1 && selectedCharCheck == '_' || selectedCharCheck == '&' || selectedCharCheck == '-' || selectedCharCheck == '/' || selectedCharCheck == '=') {
+                            } else if (i == 1 && selectedCharCheck == '_' || selectedCharCheck == '&' || selectedCharCheck == '-' || selectedCharCheck == '/' || selectedCharCheck == '|' || selectedCharCheck == '=') {
                                 stateOne = true;
 
                             } else if (i == 2 && selectedCharCheck == '#') {
@@ -2111,7 +2125,14 @@ public class Home extends javax.swing.JFrame {
                         fwTwo.write(beforeCode + "\n\n");
                         while (br.ready()) { // reading from the first file then write to the second file and replace all symbols link #-# to html tags
 
-                            fwTwo.append(br.readLine().replaceAll(title_symbEnd, "</title>").replaceAll(title_symb, "<title>").replaceAll(h1_symbEnd, "</h1>").replaceAll(h1_symb, "<h1 " + h1Prop + ">").replaceAll(h2_symbEnd, "</h2>").replaceAll(h2_symb, "<h2 " + h2Prop + ">").replaceAll(paragraph_symbEnd, "</p>").replaceAll(paragraph_symb, "<p " + pProp + ">").replaceAll(link_symbEnd, "</a>").replaceAll(link_symb, "<a " + "href=").replaceAll("``", "\" " + linkProp + ">").replaceAll("`", "\"") + "\n"); // reading from the first file then write to the second file and replace all symbol #-#/ to </h1>
+                            fwTwo.append(br.readLine().replaceAll(title_symbEnd, "</title>").replaceAll(title_symb, "<title>")
+                                    .replaceAll(h1_symbEnd, "</h1>").replaceAll(h1_symb, "<h1 " + h1Prop + ">")
+                                    .replaceAll(h2_symbEnd, "</h2>").replaceAll(h2_symb, "<h2 " + h2Prop + ">")
+                                    .replaceAll(paragraph_symbEnd, "</p>").replaceAll(paragraph_symb, "<p " + pProp + ">")
+                                    .replaceAll(link_symbEnd, "</a>").replaceAll(link_symb, "<a " + "href=")
+                                    .replaceAll("``", "\" " + linkProp + ">").replaceAll("`", "\"")
+                                    .replaceAll(video_symbEnd, "\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture\" allowfullscreen></iframe>")
+                                    .replaceAll(video_symb, "<iframe width=\"853\" height=\"480\" src=\"") + "\n"); // reading from the first file then write to the second file and replace all symbol #-#/ to </h1>
 
                         }
                         fwTwo.append("\n\n" + afterCode);
@@ -2134,7 +2155,7 @@ public class Home extends javax.swing.JFrame {
                 }// end writing in the second file
 
                 jTextPane.setText("");
-                JOptionPane.showMessageDialog(Home.this, "Your File has been built.");
+                JOptionPane.showMessageDialog(Home.this, "Your Article has been built.");
 
             } else {
 
@@ -2142,6 +2163,46 @@ public class Home extends javax.swing.JFrame {
         }
 
     }//GEN-LAST:event_build_BActionPerformed
+
+    private void addVideo_BMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_addVideo_BMouseEntered
+        addVideo_B.setBackground(Color.white);
+        addVideo_B.setForeground(myPurple);
+    }//GEN-LAST:event_addVideo_BMouseEntered
+
+    private void addVideo_BMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_addVideo_BMouseExited
+        addVideo_B.setBackground(myPurple);
+        addVideo_B.setForeground(Color.white);
+    }//GEN-LAST:event_addVideo_BMouseExited
+
+    private void addVideo_BActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addVideo_BActionPerformed
+        ///////////////////////////////////////////////////////////////////////////////////////////
+        //Start checking if the there is already a symbols in the text to abstain from puting tag
+        ///////////////////////////////////////////////////////////////////////////////////////////
+
+        cursorT = jTextPane.getSelectedText();
+
+        if (cursorT == null) {
+            String url;
+            url = JOptionPane.showInputDialog(this, "Insert a youtube video URL", "https://");
+            url = url.replace("watch?v=", "embed/"); //replacing watch?v= with embed because of the video does not work if the url not embed
+            
+            if (url.contains("&")) { // if the url contains '&' will crop it with all the characters after it
+                int i = url.indexOf("&");
+                url = url.substring(0, i); // not croping all the characters after '&' also to make the video work
+            }
+            
+            if (url.equals(null)) {
+
+            } else {
+                jTextPane.replaceSelection(video_symb + url + video_symbEnd); // replacing the selected text with the same text plus the symbol
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "You can't add a Youtube video to a selected text");
+
+        }
+
+
+    }//GEN-LAST:event_addVideo_BActionPerformed
 
     /**
      * @param args the command line arguments
@@ -2186,6 +2247,7 @@ public class Home extends javax.swing.JFrame {
     private javax.swing.JMenuItem LTR_B;
     private javax.swing.JMenuItem RTL_B;
     private javax.swing.JButton addLink_B;
+    private javax.swing.JButton addVideo_B;
     private javax.swing.JMenuItem afterCode_B;
     private javax.swing.JMenuItem beforeCode_B;
     private javax.swing.JMenuItem build_B;
@@ -2216,7 +2278,6 @@ public class Home extends javax.swing.JFrame {
     private static javax.swing.JTextPane jTextPane;
     private javax.swing.JToolBar jToolBar1;
     private javax.swing.JMenuItem linkMenu_B;
-    private javax.swing.JButton newLine_B;
     private javax.swing.JMenuItem new_B;
     private javax.swing.JMenuItem open_B;
     private javax.swing.JMenuItem pMenu_B;
