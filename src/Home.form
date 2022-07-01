@@ -308,11 +308,20 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="linkMenu_B">
               <Properties>
-                <Property name="text" type="java.lang.String" value="&lt;link&gt; tag properties or style ( Code )"/>
+                <Property name="text" type="java.lang.String" value="&lt;a&gt; tag properties or style ( Code )"/>
                 <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;  &lt;body&gt;   &lt;h5&gt;Optional&lt;/h5&gt;  &lt;/body&gt; &lt;/html&gt;"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="linkMenu_BActionPerformed"/>
+              </Events>
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="videoMenu_B">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="&lt;iframe&gt; tag properties or style ( Code )"/>
+                <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;  &lt;body&gt;   &lt;h5&gt;Optional&lt;/h5&gt;  &lt;/body&gt; &lt;/html&gt;"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="videoMenu_BActionPerformed"/>
               </Events>
             </MenuItem>
             <MenuItem class="javax.swing.JPopupMenu$Separator" name="jSeparator4">
@@ -451,7 +460,6 @@
                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       </Group>
                   </Group>
-                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Component id="jScrollPane2" pref="429" max="32767" attributes="0"/>
               </Group>
           </Group>
@@ -468,11 +476,8 @@
             <Component class="javax.swing.JTextPane" name="jTextPane">
               <Properties>
                 <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-                  <Border info="org.netbeans.modules.form.compat2.border.SoftBevelBorderInfo">
-                    <BevelBorder bevelType="1">
-                      <Color PropertyName="highlightOuter" blue="e9" green="e9" red="e9" type="rgb"/>
-                      <Color PropertyName="highlightInner" blue="e9" green="e9" red="e9" type="rgb"/>
-                    </BevelBorder>
+                  <Border info="org.netbeans.modules.form.compat2.border.EtchedBorderInfo">
+                    <EtchetBorder/>
                   </Border>
                 </Property>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">

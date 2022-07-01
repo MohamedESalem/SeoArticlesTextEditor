@@ -98,6 +98,7 @@ public class Home extends javax.swing.JFrame {
     String h2Prop = ""; // variable to store the style or properties of the text the will be tagged with h2 tag
     String pProp = ""; // variable to store the style of or properties the text the will be tagged with p tag
     String linkProp = ""; // variable to store the style or properties of the text the will be tagged with link tag
+    String videoProp = ""; // variable to store the style or properties of the text the will be tagged with video tag
     String afterCode = ""; // variable to store the code before the article to use it in the build
 
     //declaring colors
@@ -184,6 +185,7 @@ public class Home extends javax.swing.JFrame {
         h2Menu_B = new javax.swing.JMenuItem();
         pMenu_B = new javax.swing.JMenuItem();
         linkMenu_B = new javax.swing.JMenuItem();
+        videoMenu_B = new javax.swing.JMenuItem();
         jSeparator4 = new javax.swing.JPopupMenu.Separator();
         afterCode_B = new javax.swing.JMenuItem();
         code_button_menu_bar2 = new javax.swing.JMenu();
@@ -201,7 +203,7 @@ public class Home extends javax.swing.JFrame {
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
-        jTextPane.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.LOWERED, new java.awt.Color(233, 233, 233), new java.awt.Color(233, 233, 233), null, null));
+        jTextPane.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         jTextPane.setFont(new java.awt.Font("Segoe UI", 0, 20)); // NOI18N
         jTextPane.addMouseWheelListener(new java.awt.event.MouseWheelListener() {
             public void mouseWheelMoved(java.awt.event.MouseWheelEvent evt) {
@@ -453,7 +455,6 @@ public class Home extends javax.swing.JFrame {
                             .addComponent(textSize)
                             .addComponent(saved_L))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 429, Short.MAX_VALUE))
         );
 
@@ -687,7 +688,7 @@ public class Home extends javax.swing.JFrame {
         });
         code_button_menu_bar.add(pMenu_B);
 
-        linkMenu_B.setText("<link> tag properties or style ( Code )");
+        linkMenu_B.setText("<a> tag properties or style ( Code )");
         linkMenu_B.setToolTipText("<html>  <body>   <h5>Optional</h5>  </body> </html>");
         linkMenu_B.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -695,6 +696,15 @@ public class Home extends javax.swing.JFrame {
             }
         });
         code_button_menu_bar.add(linkMenu_B);
+
+        videoMenu_B.setText("<iframe> tag properties or style ( Code )");
+        videoMenu_B.setToolTipText("<html>  <body>   <h5>Optional</h5>  </body> </html>");
+        videoMenu_B.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                videoMenu_BActionPerformed(evt);
+            }
+        });
+        code_button_menu_bar.add(videoMenu_B);
         code_button_menu_bar.add(jSeparator4);
 
         afterCode_B.setText("After ( Code ) *");
@@ -1227,7 +1237,7 @@ public class Home extends javax.swing.JFrame {
 
             //End checking the last character to know if ther is an empty char' ' after the text
             if (emptyCursorState == true) {
-                JOptionPane.showMessageDialog(this, "You can't remove tags with empty characters, Please select your text without EMPTY characters from the right and left of your text");
+                JOptionPane.showMessageDialog(this, "You can't remove tags from empty characters, Please select your text without EMPTY characters from the right and left of your text");
 
             } else {
 
@@ -1934,7 +1944,7 @@ public class Home extends javax.swing.JFrame {
                 titleName = matcher.group(1);
             }
 
-            jfc.setSelectedFile(new File(dt + "_" + titleName + ".html")); //putting a defult file nameto the filechooser
+            jfc.setSelectedFile(new File(dt + "_" + titleName + ".html")); //putting a defult file name to the filechooser
 
             int x = jfc.showSaveDialog(Home.this); // showing file chooser
             //end displaying Jfilechooser to the user to choose the path of the excuted file
@@ -1970,6 +1980,7 @@ public class Home extends javax.swing.JFrame {
                 FileReader fPathH2Prop = null;
                 FileReader fPathPProp = null;
                 FileReader fPathLinkProp = null;
+                FileReader fPathIframeProp = null;
                 FileReader fPathAfterCode = null;
 
                 try {
@@ -1979,6 +1990,7 @@ public class Home extends javax.swing.JFrame {
                     fPathH2Prop = new FileReader("data//runCode//h2Prop.properties"); //file path for h2Prop.properties
                     fPathPProp = new FileReader("data//runCode//pProp.properties"); //file path for pProp.properties
                     fPathLinkProp = new FileReader("data//runCode//linkProp.properties"); //file path for linkProp.properties
+                    fPathIframeProp = new FileReader("data//runCode//iframeProp.properties"); //file path for iframeProp.properties
                     fPathAfterCode = new FileReader("data//runCode//afterCode.properties"); //file path for afterCode.properties
                 } catch (Exception e) {
                     JOptionPane.showMessageDialog(this, "Error while building the article, Please contact the developer " + e);
@@ -1993,6 +2005,7 @@ public class Home extends javax.swing.JFrame {
                 BufferedReader fwReaderH2Prop = null;
                 BufferedReader fwReaderPProp = null;
                 BufferedReader fwReaderLinkProp = null;
+                BufferedReader fwReaderIframeProp = null;
                 BufferedReader fwReaderAfterCode = null;
                 //End write declaration for the properteis tags code
 
@@ -2024,6 +2037,7 @@ public class Home extends javax.swing.JFrame {
                     fwReaderH2Prop = new BufferedReader(fPathH2Prop);
                     fwReaderPProp = new BufferedReader(fPathPProp);
                     fwReaderLinkProp = new BufferedReader(fPathLinkProp);
+                    fwReaderIframeProp = new BufferedReader(fPathIframeProp);
                     fwReaderAfterCode = new BufferedReader(fPathAfterCode);
                     //End write declaration for the properteis tags code
 
@@ -2080,6 +2094,16 @@ public class Home extends javax.swing.JFrame {
                     }
                     //End link initializing the variable beforeCode with the text that in the text file beforeCode.properties that the user has entered
 
+                    //Start link initializing the variable beforeCode with the text that in the text file beforeCode.properties that the user has entered
+                    line = fwReaderIframeProp.readLine();
+                    videoProp = "";
+
+                    while (line != null) {
+                        videoProp += line;
+                        line = fwReaderIframeProp.readLine();
+                    }
+                    //End link initializing the variable beforeCode with the text that in the text file beforeCode.properties that the user has entered
+
                     //Start last initializing the variable beforeCode with the text that in the text file beforeCode.properties that the user has entered
                     line = fwReaderAfterCode.readLine();
                     afterCode = "";
@@ -2101,6 +2125,7 @@ public class Home extends javax.swing.JFrame {
                         fwReaderH2Prop.close();
                         fwReaderPProp.close();
                         fwReaderLinkProp.close();
+                        fwReaderIframeProp.close();
                         fwReaderAfterCode.close();
                     } //End reading from the properites files that stored the code that the user entered to impelement it to the final file
                     catch (IOException ex) {
@@ -2132,7 +2157,7 @@ public class Home extends javax.swing.JFrame {
                                     .replaceAll(link_symbEnd, "</a>").replaceAll(link_symb, "<a " + "href=")
                                     .replaceAll("``", "\" " + linkProp + ">").replaceAll("`", "\"")
                                     .replaceAll(video_symbEnd, "\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture\" allowfullscreen></iframe>")
-                                    .replaceAll(video_symb, "<iframe width=\"853\" height=\"480\" src=\"") + "\n"); // reading from the first file then write to the second file and replace all symbol #-#/ to </h1>
+                                    .replaceAll(video_symb, "<iframe " + videoProp + " width=\"853\" height=\"480\" src=\"") + "\n"); // reading from the first file then write to the second file and replace all symbol #-#/ to </h1>
 
                         }
                         fwTwo.append("\n\n" + afterCode);
@@ -2175,6 +2200,10 @@ public class Home extends javax.swing.JFrame {
     }//GEN-LAST:event_addVideo_BMouseExited
 
     private void addVideo_BActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addVideo_BActionPerformed
+        
+        Highlighter highlight = jTextPane.getHighlighter(); //creating object from Highlighter class
+        purplePainter = new DefaultHighlighter.DefaultHighlightPainter(Color.MAGENTA); //making color
+
         ///////////////////////////////////////////////////////////////////////////////////////////
         //Start checking if the there is already a symbols in the text to abstain from puting tag
         ///////////////////////////////////////////////////////////////////////////////////////////
@@ -2195,6 +2224,13 @@ public class Home extends javax.swing.JFrame {
 
             } else {
                 jTextPane.replaceSelection(video_symb + url + video_symbEnd); // replacing the selected text with the same text plus the symbol
+                try {
+                    int textLength = video_symb.length() + url.length() + video_symbEnd.length();
+                    highlight.addHighlight(jTextPane.getCaretPosition() - textLength, jTextPane.getCaretPosition(), purplePainter); // making highlight to the text (from begining index, to end index, with this color) note "the +6 after the end variable is to add 6 characters to the highlighter"
+                } catch (BadLocationException ex) {
+                    JOptionPane.showMessageDialog(Home.this, " Error while highliting the video please contact the developer" + ex);
+                }
+
             }
         } else {
             JOptionPane.showMessageDialog(this, "You can't add a Youtube video to a selected text");
@@ -2203,6 +2239,32 @@ public class Home extends javax.swing.JFrame {
 
 
     }//GEN-LAST:event_addVideo_BActionPerformed
+
+    private void videoMenu_BActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_videoMenu_BActionPerformed
+        
+        videoProp = JOptionPane.showInputDialog(this, "Insert the <iframe> tag style or property   <!-- Example style=\"color:red\" -->");
+
+        File f = new File("data//runCode//iframeProp.properties");
+        FileWriter fw = null;
+
+        try {
+            fw = new FileWriter(f);
+
+            fw.write(videoProp);
+
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(Home.this, ex);
+        } finally {
+            try {
+                fw.close();
+            } catch (IOException ex) {
+                Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
+        JOptionPane.showMessageDialog(Home.this, "Saving <iframe> property is Done");
+
+    }//GEN-LAST:event_videoMenu_BActionPerformed
 
     /**
      * @param args the command line arguments
@@ -2238,6 +2300,7 @@ public class Home extends javax.swing.JFrame {
                 h.setTitle("WebPage Article Text Editor (WATE) tool");
                 h.setVisible(true);
                 saved_L.setVisible(false);
+                
             }
         });
     }
@@ -2295,5 +2358,6 @@ public class Home extends javax.swing.JFrame {
     private javax.swing.JButton title_B;
     private javax.swing.JLabel txtSize_L;
     private javax.swing.JMenuItem undo_B;
+    private javax.swing.JMenuItem videoMenu_B;
     // End of variables declaration//GEN-END:variables
 }
